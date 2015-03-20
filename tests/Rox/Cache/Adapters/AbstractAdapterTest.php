@@ -13,4 +13,12 @@ abstract class AbstractAdapterTest extends \PHPUnit_Framework_TestCase {
 		$this->adapter->write('test-key', "Hello", '+10 minutes');
 		$this->assertEquals("Hello", $this->adapter->read('test-key'));
 	}
+
+	public function testExpiration()
+	{
+		$this->adapter->delete('test-key');
+		$this->adapter->write('test-key', "Hello", '-1 second');
+		$this->assertFalse($this->adapter->read('test-key'));
+	}
+
 }

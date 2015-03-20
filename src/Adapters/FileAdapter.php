@@ -49,10 +49,10 @@ class FileAdapter extends Adapter {
 		$expires = is_string($expires) ? strtotime($expires) : time() + $expires;
 		$serializedData = serialize($data);
 
-		$fp = fopen($this->_config['path'] . '/cache_' . sha1($key) . '.txt', 'w');
+		$fp = fopen($this->_config['path'] . '/' . sha1($key) . '.roxcache', 'w');
 		flock($fp, LOCK_EX);
-		fwrite($fp, $expires . "\n");
-		fwrite($fp, strlen($serializedData) . "\n");
+		fwrite($fp, pack('N', $expires));
+		fwrite($fp, pack('N', strlen($serializedData)));
 		fwrite($fp, $serializedData);
 		flock($fp, LOCK_UN);
 		fclose($fp);
@@ -65,22 +65,22 @@ class FileAdapter extends Adapter {
 	 * @return mixed
 	 */
 	public function read($key) {
-		$fp = @fopen($this->_config['path'] . '/cache_' . sha1($key) . '.txt', 'r');
+		$fp = @fopen($this->_config['path'] . '/' . sha1($key) . '.roxcache', 'r');
 		if ($fp === false) {
 			return false;
 		}
 
 		flock($fp, LOCK_EX);
-		$expires = (integer)fgets($fp, 20);
-		if ($expires < time()) {
+
+		$meta = unpack('Nexpires/Nlen', fread($fp, 8));
+		if ($meta['expires'] < time()) {
 			flock($fp, LOCK_UN);
 			fclose($fp);
 			$this->delete($key);
 			return FALSE;
 		}
 
-		$len = (integer)fgets($fp, 20);
-		$data = fread($fp, $len);
+		$data = fread($fp, $meta['len']);
 
 		flock($fp, LOCK_UN);
 		fclose($fp);
@@ -96,6 +96,12 @@ class FileAdapter extends Adapter {
 	 * @return boolean
 	 */
 	public function delete($key) {
-		return @unlink($this->_config['path'] . '/cache_' . sha1($key) . '.txt');
+		$path = $this->_config['path'] . '/' . sha1($key) . '.roxcache';
+
+		if (!file_exists($path)) {
+			return false;
+		}
+
+		return @unlink($path);
 	}
 }
