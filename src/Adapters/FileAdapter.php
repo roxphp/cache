@@ -77,7 +77,7 @@ class FileAdapter extends Adapter {
 			flock($fp, LOCK_UN);
 			fclose($fp);
 			$this->delete($key);
-			return FALSE;
+			return false;
 		}
 
 		$data = fread($fp, $meta['len']);
