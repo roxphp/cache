@@ -2,6 +2,9 @@
 
 namespace Rox\Cache\Adapters;
 
+/**
+ * @requires extension memcached
+ */
 class MemcachedAdapterTest extends AbstractAdapterTest {
 
 	protected $adapter;

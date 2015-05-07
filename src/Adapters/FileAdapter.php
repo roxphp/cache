@@ -14,8 +14,8 @@
 
 namespace Rox\Cache\Adapters;
 
-use \Rox\Exception;
-use \Rox\Cache\Adapter;
+use Rox\Exception;
+use Rox\Cache\Adapter;
 
 /**
  * Filesystem based cache adapter

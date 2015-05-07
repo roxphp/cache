@@ -14,14 +14,15 @@
 
 namespace Rox\Cache\Adapters;
 
-use \Exception;
+use Exception;
+use Rox\Cache\Adapter;
 
 /**
  * Memcache cache adapter
  *
  * @package Rox
  */
-class MemcacheAdapter extends \rox\cache\Adapter {
+class MemcacheAdapter extends Adapter {
 
 	protected $_config = array(
 		'servers' => ['127.0.0.1:11211']
