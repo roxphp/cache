@@ -24,6 +24,7 @@ class Cache {
 	const ADAPTER_FILE      = '\Rox\Cache\Adapters\FileAdapter';
 	const ADAPTER_MEMCACHE  = '\Rox\Cache\Adapters\MemcacheAdapter';
 	const ADAPTER_MEMCACHED = '\Rox\Cache\Adapters\MemcachedAdapter';
+	const ADAPTER_NULL      = '\Rox\Cache\Adapters\NullAdapter';
 
 	protected static $_config = [
 		'adapter' => self::ADAPTER_FILE
